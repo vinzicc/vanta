@@ -12,6 +12,7 @@ import {
   Search,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { VantaflowFooter } from '@/components/VantaflowFooter'
 
 const TALLY_FORM_URL =
   process.env.NEXT_PUBLIC_TALLY_FORM_URL ??
@@ -512,20 +513,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-vanta-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-end md:justify-between lg:px-8">
-          <div>
-            <p className="text-lg font-semibold tracking-tight">Vanta.</p>
-            <p className="mt-3 max-w-sm text-xs leading-relaxed text-vanta-muted">
-              Built for faster response, cleaner qualification, and repeatable
-              pipeline growth.
-            </p>
-          </div>
-          <p className="text-sm font-medium text-vanta-muted md:text-right">
-            AI Lead Conversion Systems
-          </p>
-        </div>
-      </footer>
+      <VantaflowFooter />
     </div>
   )
 }
