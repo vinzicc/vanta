@@ -1,22 +1,25 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
   Bot,
   Calendar,
+  CheckCircle2,
   Clock,
   Database,
   GitBranch,
   Inbox,
   Search,
+  X,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { VantaflowFooter } from '@/components/VantaflowFooter'
 
 const TALLY_FORM_URL =
   process.env.NEXT_PUBLIC_TALLY_FORM_URL ??
-  'https://tally.so/r/PASTE_YOUR_FORM_ID_HERE'
+  'https://tally.so/r/xXvlPE'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -123,7 +126,7 @@ function AuditButton({
       href={TALLY_FORM_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-vanta-orange px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-vanta-orangeHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vanta-orange sm:px-6 sm:py-3.5 ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-vanta-orange px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-vanta-orangeHover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vanta-orange sm:px-6 sm:py-3.5 ${className}`}
     >
       {children}
       {showArrow && <ArrowRight size={16} strokeWidth={2} aria-hidden />}
@@ -183,9 +186,143 @@ function HeroMockup() {
   )
 }
 
-export default function Home() {
+function RedirectSuccessCard({ onClose }: { onClose: () => void }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-vanta-bg text-vanta-text">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.25 } }}
+      className="fixed inset-0 z-80 flex items-center justify-center px-4 py-6 sm:px-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="submitted-card-title"
+    >
+      <button
+        type="button"
+        aria-label="Close success message"
+        onClick={onClose}
+        className="absolute inset-0 bg-vanta-text/35 backdrop-blur-sm"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 18, scale: 0.96 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: { duration: 0.45, ease },
+        }}
+        className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-vanta-border bg-vanta-surface shadow-[0_24px_80px_rgba(0,0,0,0.18)] sm:rounded-3xl"
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(249,115,22,0.14)_0%,transparent_58%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-vanta-orange/40 to-transparent" />
+
+        <div className="relative p-5 sm:p-7 md:p-8">
+          <div className="mb-5 flex items-start justify-between gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 text-vanta-orange">
+              <CheckCircle2 size={24} strokeWidth={2} aria-hidden />
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close success message"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-vanta-muted transition-colors hover:bg-vanta-bg hover:text-vanta-text"
+            >
+              <X size={18} strokeWidth={2} aria-hidden />
+            </button>
+          </div>
+
+          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-vanta-muted">
+            Automation Check Submitted
+          </p>
+
+          <h2
+            id="submitted-card-title"
+            className="text-2xl font-semibold tracking-tight text-vanta-text sm:text-3xl"
+          >
+            Request received.
+          </h2>
+
+          <p className="mt-3 text-sm leading-relaxed text-vanta-muted sm:text-base">
+            Thanks for filling out the Vantaflow Automation Check. We’ll review
+            your lead flow and look for simple ways to improve response,
+            follow-up, routing, or lead tracking.
+          </p>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {[
+              'Review your flow',
+              'Find bottlenecks',
+              'Send next steps',
+            ].map((item, index) => (
+              <div
+                key={item}
+                className="rounded-xl border border-vanta-border bg-vanta-bg p-3"
+              >
+                <span className="mb-2 block font-mono text-xs text-vanta-orange">
+                  0{index + 1}
+                </span>
+                <p className="text-sm font-medium text-vanta-text">{item}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 rounded-xl border border-vanta-border bg-vanta-bg p-4">
+            <p className="text-sm leading-relaxed text-vanta-muted">
+              No sales call required. We’ll keep the process async and send
+              practical recommendations based on what you submitted.
+            </p>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-vanta-orange px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-vanta-orangeHover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vanta-orange"
+            >
+              Back to homepage
+            </button>
+
+            <a
+              href="#solutions"
+              onClick={onClose}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-vanta-border bg-vanta-surface px-5 py-3 text-sm font-semibold text-vanta-text transition-colors hover:bg-vanta-bg"
+            >
+              View solutions
+            </a>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+export default function Home() {
+  const [showSubmittedCard, setShowSubmittedCard] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const submitted = params.get('submitted')
+
+    if (submitted === 'true') {
+      setShowSubmittedCard(true)
+    }
+  }, [])
+
+  function handleCloseSubmittedCard() {
+    setShowSubmittedCard(false)
+
+    const url = new URL(window.location.href)
+    url.searchParams.delete('submitted')
+    window.history.replaceState({}, '', url.pathname + url.hash)
+  }
+
+  return (
+  <div className="relative min-h-screen overflow-x-hidden bg-vanta-bg text-vanta-text">
+      <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.055),transparent_30%),radial-gradient(circle_at_top_right,rgba(24,24,27,0.035),transparent_34%),linear-gradient(180deg,#FAFAFA_0%,#F8F8F8_42%,#FFFFFF_100%)] text-vanta-text">
+      {showSubmittedCard && (
+        <RedirectSuccessCard onClose={handleCloseSubmittedCard} />
+      )}
       <nav className="sticky top-0 z-50 border-b border-vanta-border/60 bg-vanta-surface/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
           <span className="shrink-0 text-lg font-semibold tracking-tight">
@@ -195,7 +332,7 @@ export default function Home() {
             href={TALLY_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded-lg bg-vanta-orange px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-vanta-orangeHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vanta-orange sm:px-4 sm:text-sm"
+            className="shrink-0 rounded-lg bg-vanta-orange px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-vanta-orangeHover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vanta-orange sm:px-4 sm:text-sm"
           >
             Request Audit
           </a>
@@ -211,7 +348,7 @@ export default function Home() {
             backgroundSize: '20px 20px',
           }}
         >
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-vanta-bg/40 via-transparent to-vanta-bg" />
+          <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-vanta-bg/40 via-transparent to-vanta-bg" />
 
           <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
             <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
@@ -304,7 +441,7 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <section className="border-y border-vanta-border bg-vanta-surface/50">
+        <section id="solutions" className="border-y border-vanta-border bg-vanta-surface/50">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
             <motion.div
               variants={fadeUp}
@@ -515,5 +652,6 @@ export default function Home() {
 
       <VantaflowFooter />
     </div>
+  </div>
   )
 }
